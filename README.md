@@ -28,6 +28,9 @@ Nestjs-Pusher is a library that aims to solve a simple problem that is providing
 By default, Pusher only gives you a default push mechanism but this library has chunking support which is great for large data amount since the default
 payload size is 10 MB.
 
+## Documentation
+Incoming soon with examples
+
 ## Features
 - Extensive API
 - Event chunking
