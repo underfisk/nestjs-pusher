@@ -8,6 +8,11 @@
     "url": "https://github.com/underfisk/nestjs-pusher",
     "type": "git"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
