@@ -52,22 +52,16 @@ export class PusherService {
   async trigger<T = any>(
     channel: string | string[],
     event: string,
-    data: T,
+    data?: T,
     socketId?: string,
   ) {
     if (!this.chunkingOptions.enabled) {
-      return await this.pusher.trigger(channel, event, data, socketId)
+      return await this.pusher.trigger(channel, event, data ?? '', socketId)
     }
 
     const chunkSize = this.chunkingOptions.limit
-    const str = data ? JSON.stringify(data, null, 0) : null
+    const str = data ? JSON.stringify(data, null, 0) : ''
     const msgId = Math.random().toString()
-    if (!str) {
-      this.logger.error(
-        `Data is undefined on trigger, current data type: ${typeof data}`,
-      )
-      return false
-    }
 
     const chunkArrayData: any[] = []
     for (let i = 0; i * chunkSize < str.length; i++) {
