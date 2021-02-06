@@ -29,7 +29,7 @@ By default, Pusher only gives you a default push mechanism but this library has 
 payload size is 10 MB.
 
 ## Documentation
-Incoming soon with examples
+https://underfisk.github.io/nestjs-pusher/docs/
 
 ## Features
 - Extensive API
