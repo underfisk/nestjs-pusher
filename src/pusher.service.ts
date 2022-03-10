@@ -56,7 +56,9 @@ export class PusherService {
     socketId?: string,
   ) {
     if (!this.chunkingOptions.enabled) {
-      return await this.pusher.trigger(channel, event, data ?? '', socketId)
+      return await this.pusher.trigger(channel, event, data ?? '', {
+        socket_id: socketId,
+      })
     }
 
     const chunkSize = this.chunkingOptions.limit
@@ -74,7 +76,9 @@ export class PusherService {
     }
     await Promise.all(
       chunkArrayData.map((e) => {
-        return this.pusher.trigger(channel, event, e, socketId)
+        return this.pusher.trigger(channel, event, e, {
+          socket_id: socketId,
+        })
       }),
     )
   }
