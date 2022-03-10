@@ -4235,15 +4235,15 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-pusher-js-mock@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/pusher-js-mock/-/pusher-js-mock-0.3.3.tgz#9cbcfce28461ef3d60d6d17cbb63b313fdb13b10"
-  integrity sha512-Qn8u167Qm+pU+ZhE/vTLL7msh3Zk6C4im4fXC/Vxsjv2anXRYhhBwt+eqFVTfGvhb0ZcwPtL8w5dkwKAFSiMGQ==
+pusher-js-mock@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/pusher-js-mock/-/pusher-js-mock-0.3.8.tgz#890cf72bd5596afd04c93a3f7839572f117a1187"
+  integrity sha512-Ge86G6kMEMhbh073jbvBEMY/plKnJZuDJWUxcba6gotA2UVV5yzmbUu7chdwHvD2khP45w+62+suJyB2te7Teg==
 
-pusher@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/pusher/-/pusher-4.0.2.tgz#cca2819572ca13b461dc3f18d70946dafed2b1d2"
-  integrity sha512-11kmKP7WZFKLs11XX14Ma+/TJg8TdW3cY/FLPkSQBFNOkXnFEdLEM6YPprzQNPIhQ05KjLS+1XR33AvuveZBRA==
+pusher@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/pusher/-/pusher-5.0.1.tgz#b7d6aaa72e0b9b2517253f173f9d0fdfda29c3bb"
+  integrity sha512-1JK/xdjEdZQ7iJwbDWA0qBdPHGNvVSoUiNXA9O7j1BHYAqenSxyORgzxWQopnYFKjQhHIcCZ8RCKJtcepWHeKw==
   dependencies:
     abort-controller "^3.0.0"
     is-base64 "^1.1.0"
