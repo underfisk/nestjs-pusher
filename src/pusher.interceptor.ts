@@ -84,16 +84,9 @@ export class PusherInterceptor implements NestInterceptor {
           : (request.headers['x-pusher-sid'] as string)
 
         if (process.env.PUSHER_DEBUG) {
-          this.logger.log(
-            `${eventName.event.name} has been dispatched to ${channelName} `,
-          )
+          this.logger.log(`${eventName} has been dispatched to ${channelName} `)
         }
-        this.pusherService.trigger(
-          channelName,
-          eventName.event.name,
-          data,
-          socketId,
-        )
+        this.pusherService.trigger(channelName, eventName, data, socketId)
       }),
     )
   }
