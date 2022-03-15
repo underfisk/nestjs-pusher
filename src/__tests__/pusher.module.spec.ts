@@ -35,7 +35,7 @@ describe('PusherModule', () => {
   })
 
   // forRootAsync: () => NestJsPusherOptions
-  describe('PusherModule.forRootAsync with Promise<NestJsPusherOptions>', () => {
+  describe('PusherModule.forRootAsync with NestJsPusherOptions', () => {
     let asyncApp: INestApplication
     beforeEach(async () => {
       const module = await Test.createTestingModule({
