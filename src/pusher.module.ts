@@ -1,6 +1,6 @@
-import { DynamicModule, Logger, Module, Provider } from '@nestjs/common';
-import Pusher from 'pusher';
-import { PusherService } from './pusher.service';
+import { DynamicModule, Logger, Module, Provider } from '@nestjs/common'
+import Pusher from 'pusher'
+import { PusherService } from './pusher.service'
 
 @Module({})
 export class PusherModule {
@@ -20,12 +20,45 @@ export class PusherModule {
         provide: PusherService,
         useValue: new PusherService(new Logger(), options, chunkingOptions),
       },
-    ];
+    ]
     return {
       module: PusherModule,
       global: isGlobal,
       providers,
       exports: providers,
-    };
+    }
   }
+
+  static forRootAsync(
+    options: () => NestJsPusherOptions | Promise<NestJsPusherOptions>,
+    isGlobal = true,
+  ): DynamicModule {
+    const providers: Provider[] = [
+      {
+        provide: PusherService,
+        useFactory: async () => {
+          const nestJsPusherOptions = await options()
+          return new PusherService(
+            new Logger(),
+            nestJsPusherOptions.options,
+            nestJsPusherOptions.chunkingOptions || {
+              limit: 9216,
+              enabled: true,
+            },
+          )
+        },
+      },
+    ]
+    return {
+      module: PusherModule,
+      global: isGlobal,
+      providers,
+      exports: providers,
+    }
+  }
+}
+
+export interface NestJsPusherOptions {
+  options: Pusher.Options
+  chunkingOptions?: { limit: number; enabled: boolean }
 }
