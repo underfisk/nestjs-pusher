@@ -1,4 +1,4 @@
-import { Logger, Provider } from '@nestjs/common'
+import { Provider } from '@nestjs/common'
 import { PusherService } from './pusher.service'
 
 /**
@@ -7,7 +7,6 @@ import { PusherService } from './pusher.service'
 export const PusherServiceTestingProvider: Provider = {
   provide: PusherService,
   useValue: new PusherService(
-    new Logger(),
     { appId: '', cluster: '', host: '', key: '', secret: '' },
     { limit: 0, enabled: false },
   ),

@@ -24,13 +24,11 @@ import { ShouldSendMiddleware } from './decorators/pusher-send-guard'
  */
 @Injectable()
 export class PusherInterceptor implements NestInterceptor {
+  private readonly logger = new Logger(PusherInterceptor.name)
   constructor(
     private readonly reflector: Reflector,
     private readonly pusherService: PusherService,
-    private readonly logger: Logger,
-  ) {
-    this.logger.setContext('PusherInterceptor')
-  }
+  ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const eventName = this.reflector.get(PUSHER_EVENT, context.getHandler())

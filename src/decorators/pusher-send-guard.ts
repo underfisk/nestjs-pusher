@@ -21,11 +21,7 @@ export function PusherSendGuard(
     key: string,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
-    Reflect.defineMetadata(
-      PUSHER_SEND_GUARD,
-      middleware,
-      descriptor.value,
-    );
-    return descriptor;
-  };
+    Reflect.defineMetadata(PUSHER_SEND_GUARD, middleware, descriptor.value)
+    return descriptor
+  }
 }

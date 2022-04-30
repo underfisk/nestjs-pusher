@@ -1,8 +1,6 @@
 import { PUSHER_SID_FACTORY } from '../constants'
 
-export type PusherSocketIdFactory<Req = any> = (
-  req: Req,
-) => string
+export type PusherSocketIdFactory<Req = any> = (req: Req) => string
 
 /**
  * Decorators the function to customize the socket id factory

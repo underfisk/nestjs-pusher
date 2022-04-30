@@ -4,13 +4,12 @@ import * as Pusher from 'pusher'
 @Injectable()
 export class PusherService {
   private readonly pusher: Pusher
+  private readonly logger = new Logger(PusherService.name)
 
   constructor(
-    private readonly logger: Logger,
     private readonly options: Pusher.Options,
     private readonly chunkingOptions: { limit: number; enabled: boolean },
   ) {
-    this.logger.setContext('PusherService')
     this.pusher = new Pusher(options)
     if (this.chunkingOptions.enabled && this.chunkingOptions.limit > 10000) {
       this.logger.warn(

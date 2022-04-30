@@ -1,4 +1,4 @@
-import { DynamicModule, Logger, Module, Provider } from '@nestjs/common'
+import { DynamicModule, Module, Provider } from '@nestjs/common'
 import Pusher from 'pusher'
 import { PusherService } from './pusher.service'
 
@@ -18,7 +18,7 @@ export class PusherModule {
     const providers: Provider[] = [
       {
         provide: PusherService,
-        useValue: new PusherService(new Logger(), options, chunkingOptions),
+        useValue: new PusherService(options, chunkingOptions),
       },
     ]
     return {
@@ -39,7 +39,6 @@ export class PusherModule {
         useFactory: async () => {
           const nestJsPusherOptions = await options()
           return new PusherService(
-            new Logger(),
             nestJsPusherOptions.options,
             nestJsPusherOptions.chunkingOptions || {
               limit: 9216,

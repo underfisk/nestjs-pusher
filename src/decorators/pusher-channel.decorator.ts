@@ -17,11 +17,7 @@ export function PusherChannel(
     key: string,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
-    Reflect.defineMetadata(
-      PUSHER_CHANNEL,
-      channel,
-      descriptor.value,
-    );
-    return descriptor;
-  };
+    Reflect.defineMetadata(PUSHER_CHANNEL, channel, descriptor.value)
+    return descriptor
+  }
 }
