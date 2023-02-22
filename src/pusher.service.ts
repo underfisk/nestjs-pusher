@@ -27,16 +27,17 @@ export class PusherService {
 
   /**
    * Authenticates the target `socketId` into a private channel
+   *
    * @param socketId
    * @param channelName
    * @param data
    */
-  authenticate(
+  authorizeChannel(
     socketId: string,
     channelName: string,
     data?: Pusher.PresenceChannelData,
   ) {
-    return this.pusher.authenticate(socketId, channelName, data)
+    return this.pusher.authorizeChannel(socketId, channelName, data)
   }
 
   /**
