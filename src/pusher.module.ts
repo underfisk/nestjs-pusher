@@ -45,8 +45,8 @@ export class PusherModule {
     const providers: Provider[] = [
       {
         provide: PusherService,
-        useFactory: async () => {
-          const nestJsPusherOptions = await options.useFactory()
+        useFactory: async (...args) => {
+          const nestJsPusherOptions = await options.useFactory(...args)
           return new PusherService(
             nestJsPusherOptions.options,
             nestJsPusherOptions.chunkingOptions || {
