@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { Reflector } from '@nestjs/core'
+import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql'
 import { PusherService } from './pusher.service'
 import {
   PUSHER_CHANNEL,
@@ -33,8 +34,13 @@ export class PusherInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const eventName = this.reflector.get(PUSHER_EVENT, context.getHandler())
 
-    const request = context.switchToHttp().getRequest()
-    const response = context.switchToHttp().getResponse()
+    let request = context.switchToHttp().getRequest()
+    let response = context.switchToHttp().getResponse()
+    if (context.getType<GqlContextType>() === 'graphql') {
+      const ctx = GqlExecutionContext.create(context)
+      request = ctx.getContext().req
+      response = ctx.getContext().res
+    }
 
     return next.handle().pipe(
       tap((data) => {
