@@ -1,6 +1,15 @@
-import { DynamicModule, Module, Provider } from '@nestjs/common'
+import {
+  DynamicModule,
+  FactoryProvider,
+  Module,
+  ModuleMetadata,
+  Provider,
+} from '@nestjs/common'
 import Pusher from 'pusher'
 import { PusherService } from './pusher.service'
+
+export type NestJsPusherAsyncOptions = Pick<ModuleMetadata, 'imports'> &
+  Pick<FactoryProvider<NestJsPusherOptions>, 'useFactory' | 'inject'>
 
 @Module({})
 export class PusherModule {
@@ -30,14 +39,14 @@ export class PusherModule {
   }
 
   static forRootAsync(
-    options: () => NestJsPusherOptions | Promise<NestJsPusherOptions>,
+    options: NestJsPusherAsyncOptions,
     isGlobal = true,
   ): DynamicModule {
     const providers: Provider[] = [
       {
         provide: PusherService,
         useFactory: async () => {
-          const nestJsPusherOptions = await options()
+          const nestJsPusherOptions = await options.useFactory()
           return new PusherService(
             nestJsPusherOptions.options,
             nestJsPusherOptions.chunkingOptions || {
@@ -46,10 +55,12 @@ export class PusherModule {
             },
           )
         },
+        inject: options.inject,
       },
     ]
     return {
       module: PusherModule,
+      imports: options.imports,
       global: isGlobal,
       providers,
       exports: providers,
