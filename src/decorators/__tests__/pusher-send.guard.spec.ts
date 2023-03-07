@@ -1,6 +1,6 @@
 import { PUSHER_SEND_GUARD } from '../../constants'
 import 'reflect-metadata'
-import { PusherSendGuard, ShouldSendMiddleware } from '../pusher-send-guard'
+import { PusherSendGuard, ShouldSendMiddleware } from '../pusher-send.guard'
 
 describe('PusherSendGuard', () => {
   it('should be defined', () => {

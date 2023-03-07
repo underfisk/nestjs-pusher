@@ -74,7 +74,7 @@ export class PusherService {
         final: chunkSize * (i + 1) >= str.length,
       })
     }
-    await Promise.all(
+    return await Promise.all(
       chunkArrayData.map((e) => {
         return this.pusher.trigger(channel, event, e, {
           socket_id: socketId,

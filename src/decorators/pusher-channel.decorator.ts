@@ -1,6 +1,5 @@
 import { PUSHER_CHANNEL } from '../constants'
 
-export type ChannelBuilderMiddleware<Req = any> = (
   req: Req,
   eventName: string,
 ) => string
@@ -14,7 +13,7 @@ export function PusherChannel(
   return (
     // eslint-disable-next-line @typescript-eslint/ban-types
     target: object,
-    key: string,
+    key: string | symbol,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
     Reflect.defineMetadata(PUSHER_CHANNEL, channel, descriptor.value)

@@ -2,7 +2,7 @@ import { PUSHER_SEND_GUARD } from '../constants'
 
 export type ShouldSendMiddleware<Req = any, Res = any> = (
   req: Req,
-  response: Response,
+  res: Res,
   eventName: string,
 ) => boolean
 
@@ -18,7 +18,7 @@ export function PusherSendGuard(
   return (
     // eslint-disable-next-line @typescript-eslint/ban-types
     target: object,
-    key: string,
+    key: string | symbol,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
     Reflect.defineMetadata(PUSHER_SEND_GUARD, middleware, descriptor.value)

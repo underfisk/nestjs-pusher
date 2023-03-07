@@ -13,7 +13,7 @@ export function PusherSocketId(
   return (
     // eslint-disable-next-line @typescript-eslint/ban-types
     target: object,
-    key: string,
+    key: string | symbol,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
     Reflect.defineMetadata(PUSHER_SID_FACTORY, factory, descriptor.value)
