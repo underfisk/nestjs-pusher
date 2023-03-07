@@ -77,6 +77,7 @@ export class PusherInterceptor implements NestInterceptor {
         let channelName = channelMetadata
         // If its a channel builder then we need to invoke it
         if (typeof channelMetadata === 'function') {
+          channelName = channelMetadata(request, data, eventName)
         }
         const socketId = socketIdFactory
           ? typeof socketIdFactory === 'string'

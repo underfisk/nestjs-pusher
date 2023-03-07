@@ -1,6 +1,8 @@
 import { PUSHER_CHANNEL } from '../constants'
 
+export type ChannelBuilderMiddleware<Req = any, Res = any> = (
   req: Req,
+  res: Res,
   eventName: string,
 ) => string
 
