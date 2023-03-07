@@ -8,7 +8,7 @@ export function PusherEvent(name: string): MethodDecorator {
   return (
     // eslint-disable-next-line @typescript-eslint/ban-types
     target: object,
-    key: string,
+    key: string | symbol,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
     Reflect.defineMetadata(PUSHER_EVENT, name, descriptor.value)

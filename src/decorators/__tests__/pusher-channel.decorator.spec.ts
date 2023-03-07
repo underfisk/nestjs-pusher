@@ -33,6 +33,7 @@ describe('PusherChannel', () => {
   it('should be defined as a factory', () => {
     const channelFactory: ChannelBuilderMiddleware = (
       _req: any,
+      _res: any,
       _eventName: string,
     ) => {
       return 'from-factory'

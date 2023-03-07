@@ -5,10 +5,10 @@ import {
   CallHandler,
   Logger,
 } from '@nestjs/common'
+import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql'
+import { Reflector } from '@nestjs/core'
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
-import { Reflector } from '@nestjs/core'
-import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql'
 import { PusherService } from './pusher.service'
 import {
   PUSHER_CHANNEL,
@@ -16,7 +16,7 @@ import {
   PUSHER_SEND_GUARD,
   PUSHER_SID_FACTORY,
 } from './constants'
-import { ShouldSendMiddleware } from './decorators/pusher-send-guard'
+import { ShouldSendMiddleware } from './decorators/pusher-send.guard'
 
 /**
  * Intercepts the HTTP response and dispatches the pusher-event with the custom decorators
@@ -41,10 +41,9 @@ export class PusherInterceptor implements NestInterceptor {
       request = ctx.getContext().req
       response = ctx.getContext().res
     }
-
     return next.handle().pipe(
       tap((data) => {
-        //If the method is not decorated with PusherEvent, skip
+        // If the method is not decorated with PusherEvent, skip
         if (!eventName) {
           return data
         }
@@ -61,8 +60,8 @@ export class PusherInterceptor implements NestInterceptor {
           PUSHER_SID_FACTORY,
           context.getHandler(),
         )
-        //If guard does not allow to proceed, return data normally
-        if (sendGuard && !sendGuard(request, response, eventName)) {
+        // If guard does not allow to proceed, return data normally
+        if (sendGuard && !sendGuard(request, data, eventName)) {
           return data
         }
 
@@ -76,11 +75,10 @@ export class PusherInterceptor implements NestInterceptor {
         }
 
         let channelName = channelMetadata
-        //If its a channel builder then we need to invoke it
+        // If its a channel builder then we need to invoke it
         if (typeof channelMetadata === 'function') {
-          channelName = channelMetadata(request, eventName)
+          channelName = channelMetadata(request, data, eventName)
         }
-
         const socketId = socketIdFactory
           ? typeof socketIdFactory === 'string'
             ? request.headers[socketIdFactory]
