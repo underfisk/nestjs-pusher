@@ -44,6 +44,12 @@ $ npm install nestjs-pusher
 $ yarn add nestjs-pusher
 ```
 
+## Dependency
+Since this library uses GraphQl, it should be previously installed in your project as it is considered installed by default.
+```bash
+npm install --save @nestjs/graphql
+```
+
 ## Contribute
 Feel free to help this library, I'm quite busy with also another Nestjs packages, but the community will appreciate the effort
 of improving this library. Make sure you follow the guidelines
