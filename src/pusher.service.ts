@@ -10,7 +10,7 @@ export class PusherService {
     private readonly options: Pusher.Options,
     private readonly chunkingOptions: { limit: number; enabled: boolean },
   ) {
-    this.pusher = new Pusher(options)
+    this.pusher = new Pusher(this.options)
     if (this.chunkingOptions.enabled && this.chunkingOptions.limit > 10000) {
       this.logger.warn(
         `Pusher payload limit is 10 MB, you have passed ${this.chunkingOptions.limit} therefore its recommended to keep it equal or less`,

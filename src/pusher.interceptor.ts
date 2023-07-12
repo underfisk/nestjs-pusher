@@ -5,9 +5,7 @@ import {
   CallHandler,
   Logger,
 } from '@nestjs/common'
-import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql'
 import { Reflector } from '@nestjs/core'
-import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { PusherService } from './pusher.service'
 import {
@@ -17,6 +15,7 @@ import {
   PUSHER_SID_FACTORY,
 } from './constants'
 import { ShouldSendMiddleware } from './decorators/pusher-send.guard'
+import { loadPackage } from './load-package.util'
 
 /**
  * Intercepts the HTTP response and dispatches the pusher-event with the custom decorators
@@ -29,18 +28,18 @@ export class PusherInterceptor implements NestInterceptor {
   constructor(
     private readonly reflector: Reflector,
     private readonly pusherService: PusherService,
-  ) {}
+  ) { }
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  async intercept(context: ExecutionContext, next: CallHandler) {
     const eventName = this.reflector.get(PUSHER_EVENT, context.getHandler())
 
     let request = context.switchToHttp().getRequest()
-    let response = context.switchToHttp().getResponse()
-    if (context.getType<GqlContextType>() === 'graphql') {
+    if (context.getType<any>() === 'graphql') {
+      const { GqlExecutionContext } = loadPackage('@nestjs/graphql', 'PusherInterceptor')
       const ctx = GqlExecutionContext.create(context)
       request = ctx.getContext().req
-      response = ctx.getContext().res
     }
+
     return next.handle().pipe(
       tap((data) => {
         // If the method is not decorated with PusherEvent, skip
@@ -67,8 +66,7 @@ export class PusherInterceptor implements NestInterceptor {
 
         if (!channelMetadata) {
           this.logger.warn(
-            `PusherChannel not found for handler: ${
-              context.getHandler().name
+            `PusherChannel not found for handler: ${context.getHandler().name
             } at event: ` + eventName,
           )
           return data
