@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common'
+import { Request } from 'express'
 
 import {
   PusherChannel,
@@ -47,7 +48,7 @@ export class HelloController {
    * @returns Hello, World
    */
   @Get('channel-name-builder')
-  @PusherChannel((req: { query: Record<string, any> }) => req.query['channel'].toString())
+  @PusherChannel((req: Request) => req.query['channel'].toString())
   @PusherEvent('greetings')
   channelNameBuilder() {
     return 'May the Force be with you'
@@ -60,7 +61,7 @@ export class HelloController {
   @Get('send-guard')
   @PusherChannel('world-channel')
   @PusherEvent('greetings')
-  @PusherSendGuard((req: { query: Record<string, any> }) =>
+  @PusherSendGuard((req: Request) =>
     req.query['channel'].toString().startsWith('good-'),
   )
   sendGuard() {
