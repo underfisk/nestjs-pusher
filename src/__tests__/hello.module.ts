@@ -21,7 +21,7 @@ export class HelloController {
   }
 
   /**
-   * Channel & Evennt
+   * Channel & Event
    * @returns Hello, World
    */
   @Get('channel-and-event')
