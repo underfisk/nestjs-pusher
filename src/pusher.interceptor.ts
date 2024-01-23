@@ -1,21 +1,10 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-  Logger,
-} from '@nestjs/common'
-import { Reflector } from '@nestjs/core'
-import { tap } from 'rxjs/operators'
-import { PusherService } from './pusher.service'
-import {
-  PUSHER_CHANNEL,
-  PUSHER_EVENT,
-  PUSHER_SEND_GUARD,
-  PUSHER_SID_FACTORY,
-} from './constants'
-import { ShouldSendMiddleware } from './decorators/pusher-send.guard'
-import { loadPackage } from './load-package.util'
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Logger } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { tap } from 'rxjs/operators';
+import { PusherService } from './pusher.service';
+import { PUSHER_CHANNEL, PUSHER_EVENT, PUSHER_SEND_GUARD, PUSHER_SID_FACTORY } from './constants';
+import { ShouldSendMiddleware } from './decorators/pusher-send.guard';
+import { loadPackage } from './load-package.util';
 
 /**
  * Intercepts the HTTP response and dispatches the pusher-event with the custom decorators
@@ -24,70 +13,58 @@ import { loadPackage } from './load-package.util'
  */
 @Injectable()
 export class PusherInterceptor implements NestInterceptor {
-  private readonly logger = new Logger(PusherInterceptor.name)
+  private readonly logger = new Logger(PusherInterceptor.name);
   constructor(
     private readonly reflector: Reflector,
     private readonly pusherService: PusherService,
-  ) { }
+  ) {}
 
   async intercept(context: ExecutionContext, next: CallHandler) {
-    const eventName = this.reflector.get(PUSHER_EVENT, context.getHandler())
+    const eventName = this.reflector.get(PUSHER_EVENT, context.getHandler());
 
-    let request = context.switchToHttp().getRequest()
+    let request = context.switchToHttp().getRequest();
     if (context.getType<any>() === 'graphql') {
-      const { GqlExecutionContext } = loadPackage('@nestjs/graphql', 'PusherInterceptor')
-      const ctx = GqlExecutionContext.create(context)
-      request = ctx.getContext().req
+      const { GqlExecutionContext } = loadPackage('@nestjs/graphql', 'PusherInterceptor');
+      const ctx = GqlExecutionContext.create(context);
+      request = ctx.getContext().req;
     }
 
     return next.handle().pipe(
-      tap((data) => {
+      tap(data => {
         // If the method is not decorated with PusherEvent, skip
         if (!eventName) {
-          return data
+          return data;
         }
 
-        const sendGuard = this.reflector.get<ShouldSendMiddleware>(
-          PUSHER_SEND_GUARD,
-          context.getHandler(),
-        )
-        const channelMetadata = this.reflector.get(
-          PUSHER_CHANNEL,
-          context.getHandler(),
-        )
-        const socketIdFactory = this.reflector.get(
-          PUSHER_SID_FACTORY,
-          context.getHandler(),
-        )
+        const sendGuard = this.reflector.get<ShouldSendMiddleware>(PUSHER_SEND_GUARD, context.getHandler());
+        const channelMetadata = this.reflector.get(PUSHER_CHANNEL, context.getHandler());
+        const socketIdFactory = this.reflector.get(PUSHER_SID_FACTORY, context.getHandler());
         // If guard does not allow to proceed, return data normally
         if (sendGuard && !sendGuard(request, data, eventName)) {
-          return data
+          return data;
         }
 
         if (!channelMetadata) {
-          this.logger.warn(
-            `PusherChannel not found for handler: ${context.getHandler().name
-            } at event: ` + eventName,
-          )
-          return data
+          this.logger.warn(`PusherChannel not found for handler: ${context.getHandler().name} at event: ` + eventName);
+          return data;
         }
 
-        let channelName = channelMetadata
+        let channelName = channelMetadata;
         // If its a channel builder then we need to invoke it
         if (typeof channelMetadata === 'function') {
-          channelName = channelMetadata(request, data, eventName)
+          channelName = channelMetadata(request, data, eventName);
         }
         const socketId = socketIdFactory
           ? typeof socketIdFactory === 'string'
             ? request.headers[socketIdFactory]
             : socketIdFactory(request)
-          : (request.headers['x-pusher-sid'] as string)
+          : (request.headers['x-pusher-sid'] as string);
 
         if (process.env.PUSHER_DEBUG) {
-          this.logger.log(`${eventName} has been dispatched to ${channelName} `)
+          this.logger.log(`${eventName} has been dispatched to ${channelName} `);
         }
-        this.pusherService.trigger(channelName, eventName, data, socketId)
+        this.pusherService.trigger(channelName, eventName, data, socketId);
       }),
-    )
+    );
   }
 }

@@ -1,20 +1,20 @@
-import { Injectable, Logger } from '@nestjs/common'
-import * as Pusher from 'pusher'
+import { Injectable, Logger } from '@nestjs/common';
+import * as Pusher from 'pusher';
 
 @Injectable()
 export class PusherService {
-  private readonly pusher: Pusher
-  private readonly logger = new Logger(PusherService.name)
+  private readonly pusher: Pusher;
+  private readonly logger = new Logger(PusherService.name);
 
   constructor(
     private readonly options: Pusher.Options,
     private readonly chunkingOptions: { limit: number; enabled: boolean },
   ) {
-    this.pusher = new Pusher(this.options)
+    this.pusher = new Pusher(this.options);
     if (this.chunkingOptions.enabled && this.chunkingOptions.limit > 10000) {
       this.logger.warn(
         `Pusher payload limit is 10 MB, you have passed ${this.chunkingOptions.limit} therefore its recommended to keep it equal or less`,
-      )
+      );
     }
   }
 
@@ -22,7 +22,7 @@ export class PusherService {
    * Returns the underlying pusher instance
    */
   getPusherInstance() {
-    return this.pusher
+    return this.pusher;
   }
 
   /**
@@ -32,12 +32,8 @@ export class PusherService {
    * @param channelName
    * @param data
    */
-  authorizeChannel(
-    socketId: string,
-    channelName: string,
-    data?: Pusher.PresenceChannelData,
-  ) {
-    return this.pusher.authorizeChannel(socketId, channelName, data)
+  authorizeChannel(socketId: string, channelName: string, data?: Pusher.PresenceChannelData) {
+    return this.pusher.authorizeChannel(socketId, channelName, data);
   }
 
   /**
@@ -49,37 +45,32 @@ export class PusherService {
    * @param data
    * @param socketId
    */
-  async trigger<T = any>(
-    channel: string | string[],
-    event: string,
-    data?: T,
-    socketId?: string,
-  ) {
+  async trigger<T = any>(channel: string | string[], event: string, data?: T, socketId?: string) {
     if (!this.chunkingOptions.enabled) {
       return await this.pusher.trigger(channel, event, data ?? '', {
         socket_id: socketId,
-      })
+      });
     }
 
-    const chunkSize = this.chunkingOptions.limit
-    const str = data ? JSON.stringify(data, null, 0) : ''
-    const msgId = Math.random().toString()
+    const chunkSize = this.chunkingOptions.limit;
+    const str = data ? JSON.stringify(data, null, 0) : '';
+    const msgId = Math.random().toString();
 
-    const chunkArrayData: any[] = []
+    const chunkArrayData: any[] = [];
     for (let i = 0; i * chunkSize < str.length; i++) {
       chunkArrayData.push({
         id: msgId,
         index: i,
         chunk: str.substr(i * chunkSize, chunkSize),
         final: chunkSize * (i + 1) >= str.length,
-      })
+      });
     }
     return await Promise.all(
-      chunkArrayData.map((e) => {
+      chunkArrayData.map(e => {
         return this.pusher.trigger(channel, event, e, {
           socket_id: socketId,
-        })
+        });
       }),
-    )
+    );
   }
 }

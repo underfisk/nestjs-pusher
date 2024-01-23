@@ -1,34 +1,27 @@
-import { PUSHER_SID_FACTORY } from '../../constants'
-import 'reflect-metadata'
-import {
-  PusherSocketId,
-  PusherSocketIdFactory,
-} from '../pusher-socket-id.decorator'
+import { PUSHER_SID_FACTORY } from '../../constants';
+import 'reflect-metadata';
+import { PusherSocketId, PusherSocketIdFactory } from '../pusher-socket-id.decorator';
 
 describe('PusherSocketId', () => {
   it('should be defined as header name', () => {
     class Test {
       @PusherSocketId('headerName')
       myDispatcher() {
-        return true
+        return true;
       }
     }
-    expect(
-      Reflect.getMetadata(PUSHER_SID_FACTORY, Test.prototype.myDispatcher),
-    ).toEqual('headerName')
-  })
+    expect(Reflect.getMetadata(PUSHER_SID_FACTORY, Test.prototype.myDispatcher)).toEqual('headerName');
+  });
   it('should be defined as a Factory', () => {
     const factory: PusherSocketIdFactory = () => {
-      return 'test'
-    }
+      return 'test';
+    };
     class Test {
       @PusherSocketId(factory)
       myDispatcher() {
-        return true
+        return true;
       }
     }
-    expect(
-      Reflect.getMetadata(PUSHER_SID_FACTORY, Test.prototype.myDispatcher),
-    ).toEqual(factory)
-  })
-})
+    expect(Reflect.getMetadata(PUSHER_SID_FACTORY, Test.prototype.myDispatcher)).toEqual(factory);
+  });
+});

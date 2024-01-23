@@ -1,12 +1,7 @@
-import { Controller, Get } from '@nestjs/common'
-import { Request } from 'express'
+import { Controller, Get } from '@nestjs/common';
+import { Request } from 'express';
 
-import {
-  PusherChannel,
-  PusherEvent,
-  PusherSendGuard,
-  PusherSocketId,
-} from '../decorators'
+import { PusherChannel, PusherEvent, PusherSendGuard, PusherSocketId } from '../decorators';
 
 @Controller('hello')
 export class HelloController {
@@ -17,7 +12,7 @@ export class HelloController {
   @Get('channel-only')
   @PusherChannel('world-channel')
   world() {
-    return 'Hello, World'
+    return 'Hello, World';
   }
 
   /**
@@ -28,7 +23,7 @@ export class HelloController {
   @PusherChannel('world-channel')
   @PusherEvent('greetings')
   channelAndEvent() {
-    return 'Hello, World'
+    return 'Hello, World';
   }
 
   /**
@@ -40,7 +35,7 @@ export class HelloController {
   @PusherEvent('greetings')
   @PusherSocketId('x-custom-sid')
   customClientSocketIdHeader() {
-    return 'Hello, World'
+    return 'Hello, World';
   }
 
   /**
@@ -51,7 +46,7 @@ export class HelloController {
   @PusherChannel((req: Request) => req.query['channel'].toString())
   @PusherEvent('greetings')
   channelNameBuilder() {
-    return 'May the Force be with you'
+    return 'May the Force be with you';
   }
 
   /**
@@ -61,10 +56,8 @@ export class HelloController {
   @Get('send-guard')
   @PusherChannel('world-channel')
   @PusherEvent('greetings')
-  @PusherSendGuard((req: Request) =>
-    req.query['channel'].toString().startsWith('good-'),
-  )
+  @PusherSendGuard((req: Request) => req.query['channel'].toString().startsWith('good-'))
   sendGuard() {
-    return 'Hello, World'
+    return 'Hello, World';
   }
 }

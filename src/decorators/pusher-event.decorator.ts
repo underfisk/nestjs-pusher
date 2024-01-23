@@ -1,4 +1,4 @@
-import { PUSHER_EVENT } from '../constants'
+import { PUSHER_EVENT } from '../constants';
 
 /**
  * Defers the dispatch of a `Pusher` event on API controller response
@@ -11,7 +11,7 @@ export function PusherEvent(name: string): MethodDecorator {
     key: string | symbol,
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
-    Reflect.defineMetadata(PUSHER_EVENT, name, descriptor.value)
-    return descriptor
-  }
+    Reflect.defineMetadata(PUSHER_EVENT, name, descriptor.value);
+    return descriptor;
+  };
 }

@@ -1,15 +1,9 @@
-import {
-  DynamicModule,
-  FactoryProvider,
-  Module,
-  ModuleMetadata,
-  Provider,
-} from '@nestjs/common'
-import Pusher from 'pusher'
-import { PusherService } from './pusher.service'
+import { DynamicModule, FactoryProvider, Module, ModuleMetadata, Provider } from '@nestjs/common';
+import Pusher from 'pusher';
+import { PusherService } from './pusher.service';
 
 export type NestJsPusherAsyncOptions = Pick<ModuleMetadata, 'imports'> &
-  Pick<FactoryProvider<NestJsPusherOptions>, 'useFactory' | 'inject'>
+  Pick<FactoryProvider<NestJsPusherOptions>, 'useFactory' | 'inject'>;
 
 @Module({})
 export class PusherModule {
@@ -29,46 +23,43 @@ export class PusherModule {
         provide: PusherService,
         useValue: new PusherService(options, chunkingOptions),
       },
-    ]
+    ];
     return {
       module: PusherModule,
       global: isGlobal,
       providers,
       exports: providers,
-    }
+    };
   }
 
-  static forRootAsync(
-    options: NestJsPusherAsyncOptions,
-    isGlobal = true,
-  ): DynamicModule {
+  static forRootAsync(options: NestJsPusherAsyncOptions, isGlobal = true): DynamicModule {
     const providers: Provider[] = [
       {
         provide: PusherService,
         useFactory: async (...args) => {
-          const nestJsPusherOptions = await options.useFactory(...args)
+          const nestJsPusherOptions = await options.useFactory(...args);
           return new PusherService(
             nestJsPusherOptions.options,
             nestJsPusherOptions.chunkingOptions || {
               limit: 9216,
               enabled: true,
             },
-          )
+          );
         },
         inject: options.inject,
       },
-    ]
+    ];
     return {
       module: PusherModule,
       imports: options.imports,
       global: isGlobal,
       providers,
       exports: providers,
-    }
+    };
   }
 }
 
 export interface NestJsPusherOptions {
-  options: Pusher.Options
-  chunkingOptions?: { limit: number; enabled: boolean }
+  options: Pusher.Options;
+  chunkingOptions?: { limit: number; enabled: boolean };
 }
