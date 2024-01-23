@@ -1,0 +1,6 @@
+build/
+dist/
+documentation/
+node_modules
+.github/
+*.md
