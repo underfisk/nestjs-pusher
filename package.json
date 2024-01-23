@@ -31,7 +31,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "release": "pnpm run build && pnpm run test && np"
+    "release": "pnpm run build && np --no-cleanup"
   },
   "dependencies": {
     "reflect-metadata": "^0.2.1",
