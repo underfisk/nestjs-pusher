@@ -11,8 +11,9 @@ const MISSING_REQUIRED_DEPENDENCY = (name: string, reason: string) =>
  */
 export function loadPackage(packageName: string, context: string, loaderFn?: () => any) {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     return loaderFn ? loaderFn() : require(packageName);
-  } catch (e) {
+  } catch {
     console.error(MISSING_REQUIRED_DEPENDENCY(packageName, context));
     process.exit(1);
   }

@@ -9,12 +9,7 @@ export type ShouldSendMiddleware<Req = any, Res = any> = (req: Req, res: Res, ev
  * @constructor
  */
 export function PusherSendGuard(middleware: ShouldSendMiddleware): MethodDecorator {
-  return (
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    target: object,
-    key: string | symbol,
-    descriptor: TypedPropertyDescriptor<any>,
-  ) => {
+  return (target: object, key: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
     Reflect.defineMetadata(PUSHER_SEND_GUARD, middleware, descriptor.value);
     return descriptor;
   };
