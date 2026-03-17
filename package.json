@@ -30,7 +30,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "release": "pnpm run build && np --no-cleanup"
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm run build && changeset publish"
   },
   "dependencies": {
     "reflect-metadata": "^0.2.2",
@@ -38,6 +40,7 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.30.0",
     "@nestjs/cli": "^11.0.16",
     "@nestjs/common": "^11.1.17",
     "@nestjs/core": "^11.1.17",
@@ -56,7 +59,6 @@
     "eslint-plugin-prettier": "^5.5.5",
     "jest": "^30.3.0",
     "jest-createspyobj": "^2.0.0",
-    "np": "^11.0.2",
     "prettier": "^3.8.1",
     "pusher": "^5.3.2",
     "pusher-js-mock": "^0.3.9",
